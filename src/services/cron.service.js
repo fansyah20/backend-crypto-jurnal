@@ -135,57 +135,6 @@ const cleanupOldNotifications = async () => {
 }
 
 //  INIT SEMUA CRON JOBS — dipanggil dari index.js saat server start
-const initCronJobs = () => {
-  // Cek apakah node-cron tersedia
-  let cron
-  try {
-    cron = require('node-cron')
-  } catch {
-    console.warn('[CRON] node-cron tidak terinstall. Jalankan: npm install node-cron')
-    console.warn('[CRON] Cron jobs tidak aktif.')
-    return
-  }
-
-  // Job 1: Expire subscriptions — setiap hari jam 00:05
-  cron.schedule('5 0 * * *', expireSubscriptions, {
-    timezone: 'Asia/Jakarta',
-  })
-
-  // Job 2: Renewal reminders — setiap hari jam 09:00
-  cron.schedule('0 9 * * *', sendRenewalReminders, {
-    timezone: 'Asia/Jakarta',
-  })
-
-  // Job 3: Cleanup tokens — setiap Minggu jam 02:00
-  cron.schedule('0 2 * * 0', cleanupExpiredTokens, {
-    timezone: 'Asia/Jakarta',
-  })
-
-  // Job 4: Cleanup notifikasi — setiap hari jam 03:00
-  cron.schedule('0 3 * * *', cleanupOldNotifications, {
-    timezone: 'Asia/Jakarta',
-  })
-
-  console.log('⏰ Cron jobs initialized:')
-  console.log('   • Expire subscriptions  — daily at 00:05 WIB')
-  console.log('   • Renewal reminders     — daily at 09:00 WIB')
-  console.log('   • Cleanup tokens        — every Sunday at 02:00 WIB')
-  console.log('   • Cleanup notifications — daily at 03:00 WIB')
-  console.log('   • Auto-sync exchanges     — every 30 minutes')
-
-  // Job 5: Auto-sync exchange — setiap 30 menit
-  cron.schedule('*/30 * * * *', autoSyncExchanges, { timezone: 'Asia/Jakarta' })
-}
-
-module.exports = {
-  autoSyncExchanges,
-  initCronJobs,
-  expireSubscriptions,
-  sendRenewalReminders,
-  cleanupExpiredTokens,
-  cleanupOldNotifications,
-}
-
 // JOB 5: Auto-sync exchange accounts
 // Jalan setiap jam untuk akun yang auto_sync = true
 const autoSyncExchanges = async () => {
@@ -219,3 +168,56 @@ const autoSyncExchanges = async () => {
     console.error('[CRON] autoSyncExchanges error:', err.message)
   }
 }
+
+const initCronJobs = () => {
+  // Cek apakah node-cron tersedia
+  let cron
+  try {
+    cron = require('node-cron')
+  } catch {
+    console.warn('[CRON] node-cron tidak terinstall. Jalankan: npm install node-cron')
+    console.warn('[CRON] Cron jobs tidak aktif.')
+    return
+  }
+  
+  // Job 1: Expire subscriptions — setiap hari jam 00:05
+  cron.schedule('5 0 * * *', expireSubscriptions, {
+    timezone: 'Asia/Jakarta',
+  })
+
+  // Job 2: Renewal reminders — setiap hari jam 09:00
+  cron.schedule('0 9 * * *', sendRenewalReminders, {
+    timezone: 'Asia/Jakarta',
+  })
+  
+  // Job 3: Cleanup tokens — setiap Minggu jam 02:00
+  cron.schedule('0 2 * * 0', cleanupExpiredTokens, {
+    timezone: 'Asia/Jakarta',
+  })
+  
+  // Job 4: Cleanup notifikasi — setiap hari jam 03:00
+  cron.schedule('0 3 * * *', cleanupOldNotifications, {
+    timezone: 'Asia/Jakarta',
+  })
+  
+
+  console.log('⏰ Cron jobs initialized:')
+  console.log('   • Expire subscriptions  — daily at 00:05 WIB')
+  console.log('   • Renewal reminders     — daily at 09:00 WIB')
+  console.log('   • Cleanup tokens        — every Sunday at 02:00 WIB')
+  console.log('   • Cleanup notifications — daily at 03:00 WIB')
+  console.log('   • Auto-sync exchanges     — every 30 minutes')
+  
+  // Job 5: Auto-sync exchange — setiap 30 menit
+  cron.schedule('*/30 * * * *', autoSyncExchanges, { timezone: 'Asia/Jakarta' })
+}
+
+module.exports = {
+  autoSyncExchanges,
+  initCronJobs,
+  expireSubscriptions,
+  sendRenewalReminders,
+  cleanupExpiredTokens,
+  cleanupOldNotifications,
+}
+

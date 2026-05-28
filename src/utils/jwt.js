@@ -5,7 +5,7 @@ const ACCESS_SECRET  = process.env.JWT_ACCESS_SECRET  || 'access_secret_dev'
 const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET || 'refresh_secret_dev'
 
 const generateAccessToken = (user) =>
-  jwt.sign({ sub: user.id, email: user.email, role: user.role }, ACCESS_SECRET, { expiresIn: '15m' })
+  jwt.sign({ sub: user.id, email: user.email, role: user.role }, ACCESS_SECRET, { expiresIn: '1d' })
 
 const generateRefreshToken = (userId) =>
   jwt.sign({ sub: userId, jti: crypto.randomUUID() }, REFRESH_SECRET, { expiresIn: '7d' })

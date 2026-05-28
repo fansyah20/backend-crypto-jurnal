@@ -7,7 +7,7 @@ async function main() {
   // Password default buat tim frontend lo biar gampang diingat
   const hashedPassword = await bcrypt.hash('password123', 10);
 
-  console.log('Sedang membuat data untuk tim frontend...');
+  console.log('Sedang membuat data untuk tim frontend');
 
   // Akun untuk testing fitur FREE USER
   const user1 = await prisma.user.upsert({

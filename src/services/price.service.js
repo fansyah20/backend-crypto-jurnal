@@ -151,10 +151,15 @@ const getPrices = async (symbols) => {
     ['EURUSD','GBPUSD','USDJPY','USDCHF','AUDUSD','USDCAD','NZDUSD','XAUUSD','XAGUSD','USDIDR'].includes(s)
   )
 
-  const [binancePrices, indodaxPrices] = await Promise.all([
-    cryptoUsdt.length > 0 ? fetchBinancePrices(cryptoUsdt) : {},
-    cryptoIdr.length  > 0 ? fetchIndodaxPrices(cryptoIdr.map(s => s.replace('IDR', '_IDR').toLowerCase())) : {},
-  ])
+  // Binance diblokir di ID, convert USDT symbols ke IDR untuk Indodax
+const usdtAsIdr = cryptoUsdt.map(s => s.replace('USDT', '_idr').toLowerCase())
+const allIdrPairs = [
+  ...usdtAsIdr,
+  ...cryptoIdr.map(s => s.replace('IDR', '_IDR').toLowerCase())
+]
+
+const indodaxPrices = allIdrPairs.length > 0 ? await fetchIndodaxPrices(allIdrPairs) : {}
+const binancePrices = {}
 
   if (forexComm.length > 0) await fetchForexPrices()
 

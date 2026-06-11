@@ -97,6 +97,7 @@ const createPayment = async ({ userId, planId, billingCycle }) => {
   return {
     invoiceNumber,
     amount,
+    paymentId:   payment.id,
     paymentUrl:  xenditInvoice.invoiceUrl,
     expiresAt:   xenditInvoice.expiryDate,
     xenditId:    xenditInvoice.id,
